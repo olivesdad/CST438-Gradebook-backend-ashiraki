@@ -10,6 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.util.List;
 
+
 @RestController
 public class InstructorController {
 
@@ -50,6 +51,7 @@ public class InstructorController {
     @Transactional
     public void addAssignment (@RequestBody AssignmentListDTO.AssignmentDTO a, @RequestParam String email) {
         Course course = courseRepository.findById(a.courseId).orElse(null);
+
         if ((course == null) || (!course.getInstructor().equals(email))){
             throw new ResponseStatusException( HttpStatus.BAD_REQUEST, "Invalid instructor -> course correlation. "+email +"!=" + course.getInstructor());
         }
