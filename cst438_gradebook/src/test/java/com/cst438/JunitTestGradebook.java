@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
@@ -163,7 +164,7 @@ public class JunitTestGradebook {
 	}
 
 
-	@AutoConfigureMockMvc
+
 	@Test
 	public void testAddAssignment() throws Exception{
 		MockHttpServletResponse response;
@@ -171,11 +172,14 @@ public class JunitTestGradebook {
 		course.setInstructor("dwisneski@csumb.edu");
 		course.setCourse_id(999001);
 		System.out.println(course);
-		given(courseRepository.findById(999001)).willReturn(Optional.of(course));
-		given(assignmentRepository.save(any())).willReturn(new Assignment());
+		Assignment assignment = new Assignment();
+
+		given(courseRepository.findById(any())).willReturn(Optional.of(course));
+		given(assignmentRepository.save(any())).willReturn(HttpStatus.OK);
 
 		//REQUEST BODY//
 		String requestBody = "{\"assignmentName\":\"Test 2\", \"dueDate\":\"2021-09-01\", \"courseId\":999001}";
+
 		response = mvc.perform(MockMvcRequestBuilders.post("/addassignment?email=dwisneski@csumb.edu")
 						.contentType(MediaType.APPLICATION_JSON)
 						.characterEncoding("UTF-8")

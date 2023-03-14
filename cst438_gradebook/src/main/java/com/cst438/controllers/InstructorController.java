@@ -49,7 +49,7 @@ public class InstructorController {
     // the url entered request a request parameter of ?email=<email address of instructor>
     @PostMapping ("/addassignment")
     @Transactional
-    public void addAssignment (@RequestBody AssignmentListDTO.AssignmentDTO a, @RequestParam String email) {
+    public AssignmentListDTO.AssignmentDTO addAssignment (@RequestBody AssignmentListDTO.AssignmentDTO a, @RequestParam String email) {
         Course course = courseRepository.findById(a.courseId).orElse(null);
 
         if ((course == null) || (!course.getInstructor().equals(email))){
@@ -58,9 +58,11 @@ public class InstructorController {
         Assignment assignment = new Assignment();
         assignment.setName(a.assignmentName);
         assignment.setDueDate(java.sql.Date.valueOf(a.dueDate));
-        assignment.setCourse( courseRepository.findById(a.courseId).orElse(null));
+        assignment.setCourse(course);
+      //  assignment.setCourse( courseRepository.findById(a.courseId).orElse(null));
         assignment.setNeedsGrading(1);
         assignmentRepository.save(assignment);
+        return a;
     }
 
     //  As an instructor, I can delete an assignment  for my course (only if there are no grades for the assignment).
