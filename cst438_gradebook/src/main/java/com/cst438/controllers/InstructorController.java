@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -74,6 +75,11 @@ public class InstructorController {
         //If it doesnt exist throw exception return 400
         if (as == null) {
             throw new ResponseStatusException( HttpStatus.BAD_REQUEST, "Invalid assignment id: . "+a.assignmentId);
+        }
+        //Check if there are grades
+        Collection<AssignmentGrade> temp = assignmentGradeRepository.findByAssignmentId(a.assignmentId);
+        if (temp.size() != 0){
+            throw new ResponseStatusException( HttpStatus.BAD_REQUEST, "Grades exist for this assingment");
         }
 
         assignmentRepository.deleteById(as.getId());
