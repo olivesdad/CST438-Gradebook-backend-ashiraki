@@ -122,7 +122,9 @@ public class EndToEndGradeBookTest {
         } catch (Exception ex) {
             throw ex;
         } finally {
-            driver.quit();
+            driver.close();
+	    driver.quit();
+
         }
 
     }
